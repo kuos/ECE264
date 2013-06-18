@@ -31,6 +31,7 @@ void printPartition(int *part, int length)
   printf(" %d \n", part[length -1]);
 }
 
+//Recursive function for all type partition
 void partition(int *result, int ind, int left)
 {
   int val = 0;
