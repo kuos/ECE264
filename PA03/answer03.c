@@ -76,6 +76,14 @@
  */
 struct Image* loadImage(const char* filename)
 {
+  FILE * f;
+  f= open(filename, "rb");
+  if(!f)
+    {
+      printf('Error opening the file');
+    }
+
+  
     return NULL;
 }
 
