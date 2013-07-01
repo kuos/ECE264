@@ -76,15 +76,52 @@
  */
 struct Image* loadImage(const char* filename)
 {
+  ImageHeader imghead;
+  Image * img;
   FILE * f;
+
+  
+  //Open File:
   f= open(filename, "rb");
+  
   if(!f)
     {
       printf('Error opening the file');
+      return NULL;
+    }
+  
+  //Create the Image Header:
+  //----------------------------------------------------------
+  int header_read                           
+  //Check variable, size = 16, # element = 1
+  header_read = fread(imghead,sizeof(struct ImageHeader),1,f);
+
+  if(header_read != 0)
+    {
+      printf('ERROR in reading the header');
+      return Null;
     }
 
+  if(imghead.magic_bits !=// 0x00343632 )
+     )
+    {
+      printf('ERROR, Magic_bit mismatch');
+      return NULL;
+    }
+
+
+  //Create the Image data:
+  img = malloc(sizeof(Image));
+  img->comment = malloc(sizeof(char)* imghead.comment_len);
+  img->data = malloc(sizeof(uint8_t)* imghead.width *imghead.height);
+
+  fread(img->comment,imghead.comment_len,1,f);
+  fread(img->data,imghead.width * imghead.height,1,f);
+
   
-    return NULL;
+  
+
+
 }
 
 
@@ -97,7 +134,9 @@ struct Image* loadImage(const char* filename)
  */
 void freeImage(struct Image* image)
 {
-
+  free(image->data);
+  free(image->comment);
+  free(image);
 }
 
 /*
