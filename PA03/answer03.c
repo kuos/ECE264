@@ -88,7 +88,7 @@ struct Image* loadImage(const char* filename)
   
   if(!f)
     {
-      printf("Error open!!\n\n");
+      printf("\n\nERROR! File not opened\n\n\n");
       return NULL;
     }
   
@@ -100,16 +100,21 @@ struct Image* loadImage(const char* filename)
 
   if(header_read != 1)
     {
-      printf("ERROR in reading!!\n\n");
+      printf("\n\nERROR! Header reading\n\n\n");
       return NULL;
     }
 
   if((imghead->magic_bits) != ECE264_IMAGE_MAGIC_BITS)
     {
-      printf("ERROR, Magic_bit mismatch!!\n\n");
+      printf("\n\nERROR! Magic_bit mismatch\n\n\n");
       return NULL;
     }
 
+  if(imghead->width <= 0 || imghead->height <= 0 || imghead -> comment_len <=0)
+    {
+      printf("\n\nERROR!, Dimension fault\n\n\n");
+      return NULL;
+    }
 
   //Create the Image data:
   //---------------------------------------------------------
@@ -119,8 +124,44 @@ struct Image* loadImage(const char* filename)
 
   img->comment = malloc(sizeof(char)* imghead->comment_len);
   img->data = malloc(sizeof(uint8_t)* img->width *img->height);
-  fread(img->comment, imghead->comment_len, 1, f); //read comments
-  fread(img->data, imghead->width * imghead->height, 1, f);//read data
+
+  if(img->comment == NULL || img->data == NULL)
+    {
+      printf("\n\nERROR! Data or Comment Malloc fault\n\n\n");
+      return NULL;
+    }
+
+
+  int comment_read;
+  comment_read = fread(img->comment, imghead->comment_len, 1, f);
+    
+  if(comment_read != 1)
+    {
+      printf("\n\nERROR! Comment reading fault\n\n\n");
+      return NULL;
+    }
+  
+  if(img->comment[imghead->comment_len-1]!= 0)
+    {
+      printf("\n\nERROR! Comment does not end with null byte\n\n\n");
+      return NULL;
+    }
+
+
+  int data_read;
+  data_read = fread(img->data, imghead->width * imghead->height, 1, f);//read data
+
+  if(data_read != 1)
+    {
+      printf("\n\nERROR! Data reading fault\n\n\n");
+      return NULL;
+    }
+
+  if(fread(img->data,1,1,f))
+    {
+      printf("\n\nERROR! Data and dimension mismatch\n\n\n");
+      return NULL;
+    }
 
   free(imghead);
 
@@ -191,5 +232,12 @@ struct Point convolutionMax(const struct Image* image1,
     peak.x = 0;
     peak.y = 0;
 
+    
+    
+    
+
     return peak;
 }
+
+
+
