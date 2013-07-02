@@ -74,54 +74,57 @@
  *
  * Good luck.
  */
+
 struct Image* loadImage(const char* filename)
 {
-  ImageHeader imghead;
-  Image * img;
+  struct ImageHeader * imghead;
+  struct Image *img;
   FILE * f;
 
+  imghead = malloc(sizeof(struct ImageHeader));
   
   //Open File:
-  f= open(filename, "rb");
+  f= fopen(filename, "rb");
   
   if(!f)
     {
-      printf('Error opening the file');
+      printf("Error open!!\n\n");
       return NULL;
     }
   
   //Create the Image Header:
   //----------------------------------------------------------
-  int header_read                           
+  int header_read;                           
   //Check variable, size = 16, # element = 1
   header_read = fread(imghead,sizeof(struct ImageHeader),1,f);
 
-  if(header_read != 0)
+  if(header_read != 1)
     {
-      printf('ERROR in reading the header');
-      return Null;
+      printf("ERROR in reading!!\n\n");
+      return NULL;
     }
 
-  if(imghead.magic_bits !=// 0x00343632 )
-     )
+  if((imghead->magic_bits) != ECE264_IMAGE_MAGIC_BITS)
     {
-      printf('ERROR, Magic_bit mismatch');
+      printf("ERROR, Magic_bit mismatch!!\n\n");
       return NULL;
     }
 
 
   //Create the Image data:
-  img = malloc(sizeof(Image));
-  img->comment = malloc(sizeof(char)* imghead.comment_len);
-  img->data = malloc(sizeof(uint8_t)* imghead.width *imghead.height);
+  //---------------------------------------------------------
+  img = malloc(sizeof(struct Image));
+  img->width = imghead->width;
+  img->height= imghead->height;
 
-  fread(img->comment,imghead.comment_len,1,f);
-  fread(img->data,imghead.width * imghead.height,1,f);
+  img->comment = malloc(sizeof(char)* imghead->comment_len);
+  img->data = malloc(sizeof(uint8_t)* img->width *img->height);
+  fread(img->comment, imghead->comment_len, 1, f); //read comments
+  fread(img->data, imghead->width * imghead->height, 1, f);//read data
 
-  
-  
+  free(imghead);
 
-
+  return img;
 }
 
 
@@ -134,9 +137,12 @@ struct Image* loadImage(const char* filename)
  */
 void freeImage(struct Image* image)
 {
-  free(image->data);
-  free(image->comment);
-  free(image);
+  if (image != NULL)
+    {
+      free(image->data);
+      free(image->comment);
+      free(image);
+    }
 }
 
 /*
