@@ -180,10 +180,10 @@ void freeImage(struct Image* image)
 {
   if (image != NULL)
     {
-      free(image->data);
-      free(image->comment);
-      free(image);
+	  free(image->data);
+	  free(image->comment);
     }
+  free(image);
 }
 
 /*
@@ -225,6 +225,8 @@ void freeImage(struct Image* image)
  * For more information on convolutions see: 
  * http://en.wikipedia.org/wiki/Convolution
  */
+
+//built to last
 struct Point convolutionMax(const struct Image* image1, 
 			    const struct Image* image2)
 {
@@ -232,12 +234,51 @@ struct Point convolutionMax(const struct Image* image1,
     peak.x = 0;
     peak.y = 0;
 
-    
-    
-    
+    int img1x = 0;
+    int img1y = 0;
+    int img2x = 0;
+    int img2y = 0;
 
+    int convolution = 0;
+    int max = 0; //Updates Peak value;
+
+
+
+    for(img1x = 0; img1x < image1->width ; img1x++)
+      {
+	for(img1y = 0; img1y < image1->height; img1y++)
+	  {
+	    if(convolution >max)
+	      {
+		max = convolution;
+		peak.y = img1y;
+	        peak.x = img1x;
+	      }
+	    for(img2x = 0; img2x < image2->width; img2x++)
+	      {
+		for(img2y = 0; img2y < image2->height; img2y++)
+		  { 
+		    convolution += image1->data[img1x+img2x+(img2y+img1y)*image1->width] * image2->data[img2x+img2y*image2->width];
+
+      		    //pixel[x, y] == image->data[x + y*width]
+		  }
+	      }
+	  }
+      }
     return peak;
 }
 
 
+/*
+int convolution(int img1x, int img1y, struct * image1 ,struct * image2)
+{
+  int i;
+  int j;
+  for(i = 0; i < image2->width; i++)
+    {
+      for(j=0; j < image2->height;j++)
+	 convolution = image1->data[img1x+img1y*image1->width] * 
+		                  image2->data[img2y+img2y*image2->width];
 
+
+*/
