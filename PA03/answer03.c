@@ -21,6 +21,8 @@
 
 #include "pa03.h"
 
+int covmul(int x, int y,const struct Image* image1 ,const struct Image* image2);
+
 /*
  * ============================================================================
  * This function loads in image from disk. The file is stored in a custom image 
@@ -75,6 +77,47 @@
  * Good luck.
  */
 
+/*
+#define TRUE 1
+#define FALSE 0
+
+struct Image* loadImage(const char* filename)
+{
+  struct ImageHeader * imghead = NULL;
+  struct Image *img = NULL;
+  FILE * f;
+  int okay = TRUE;
+
+  imghead = malloc(sizeof(struct ImageHeader));
+  f= fopen(filename, "rb");
+  
+  if(okay && f == NULL)
+    {
+      printf("\n\nERROR! File not opened\n\n\n");
+      okay = FALSE;
+    }
+
+
+  int header_read;                           
+  //Check variable, size = 16, # element = 1
+  if(okay) {
+    header_read = fread(imghead,sizeof(struct ImageHeader),1,f);
+    if(header_read != 1)
+      okay = FALSE;
+  }
+
+  // Cleanup everything and return
+  free(imghead);
+  if(f)
+    fclose(f);
+  if(!okay) {
+    // Call your free-image function...
+  }
+
+  return img;
+}
+*/
+
 struct Image* loadImage(const char* filename)
 {
   struct ImageHeader * imghead;
@@ -89,6 +132,7 @@ struct Image* loadImage(const char* filename)
   if(!f)
     {
       printf("\n\nERROR! File not opened\n\n\n");
+      free(imghead);
       return NULL;
     }
   
@@ -101,18 +145,21 @@ struct Image* loadImage(const char* filename)
   if(header_read != 1)
     {
       printf("\n\nERROR! Header reading\n\n\n");
+      free(imghead);
       return NULL;
     }
 
   if((imghead->magic_bits) != ECE264_IMAGE_MAGIC_BITS)
     {
       printf("\n\nERROR! Magic_bit mismatch\n\n\n");
+      free(imghead);
       return NULL;
     }
 
   if(imghead->width <= 0 || imghead->height <= 0 || imghead -> comment_len <=0)
     {
       printf("\n\nERROR!, Dimension fault\n\n\n");
+      free(imghead);
       return NULL;
     }
 
@@ -128,6 +175,8 @@ struct Image* loadImage(const char* filename)
   if(img->comment == NULL || img->data == NULL)
     {
       printf("\n\nERROR! Data or Comment Malloc fault\n\n\n");
+      freeImage(img);
+      free(imghead);
       return NULL;
     }
 
@@ -138,12 +187,17 @@ struct Image* loadImage(const char* filename)
   if(comment_read != 1)
     {
       printf("\n\nERROR! Comment reading fault\n\n\n");
+      freeImage(img);
+      free(imghead);
+
       return NULL;
     }
   
   if(img->comment[imghead->comment_len-1]!= 0)
     {
       printf("\n\nERROR! Comment does not end with null byte\n\n\n");
+      freeImage(img);
+      free(imghead);
       return NULL;
     }
 
@@ -154,12 +208,16 @@ struct Image* loadImage(const char* filename)
   if(data_read != 1)
     {
       printf("\n\nERROR! Data reading fault\n\n\n");
+      freeImage(img);
+      free(imghead);
       return NULL;
     }
 
   if(fread(img->data,1,1,f))
     {
       printf("\n\nERROR! Data and dimension mismatch\n\n\n");
+      freeImage(img);
+      free(imghead);
       return NULL;
     }
 
@@ -217,6 +275,17 @@ void freeImage(struct Image* image)
  *                  + image1[22, 41] * image2[2, 2]  
  *
  * Where image1[20, 39] == image1->data[20 + 39*640]
+
+
+
+convolution += image1->data[img1x+img2x+(img1y+img2y)*image1->width] * image2->data[img2x+img2y*image2->width];
+             = image1->data[20+0+(39+0)*640] * image2->data[0+0*2]
+	     = image1->data[20+1+(30+0)*640] * image2->data[1+0*2]
+
+
+
+
+
  *
  * To avoid a memory violation, you must make sure that you never access memory
  * outside the bounds of the pixel data in the image. (i.e., don't try 
@@ -227,6 +296,34 @@ void freeImage(struct Image* image)
  */
 
 //built to last
+
+
+int convmul(int x, int y,const struct Image* image1 ,const struct Image* image2)
+{
+  int x2 =0;
+  int y2 = 0;
+  int convolution = 0;
+
+  int xMax = 0;
+  int yMax = 0;
+ 
+  for(y2 = 0; y2 < image2->height; y2++)
+    {
+      for(x2 = 0; x2 < image2->width; x2++)
+	{
+	  yMax = image2->height + y;
+	  xMax = image2->width + x;
+	  
+	  if(xMax < image1->width && yMax < image1->height)
+	    {
+	      convolution += image1->data[x+x2+(y+y2)*image1->width] * image2->data[x2+y2*image2->width];
+	    }
+	}
+    }
+  
+  return convolution;
+}
+
 struct Point convolutionMax(const struct Image* image1, 
 			    const struct Image* image2)
 {
@@ -236,49 +333,25 @@ struct Point convolutionMax(const struct Image* image1,
 
     int img1x = 0;
     int img1y = 0;
-    int img2x = 0;
-    int img2y = 0;
 
-    int convolution = 0;
-    int max = 0; //Updates Peak value;
+    int conv = 0;
+    int max = 0; 
 
-
-
-    for(img1x = 0; img1x < image1->width ; img1x++)
+    for(img1y = 0; img1y < image1->height ; img1y++)
       {
-	for(img1y = 0; img1y < image1->height; img1y++)
+	for(img1x = 0; img1x < image1->width; img1x++)
 	  {
-	    if(convolution >max)
+	    conv = convmul(img1x, img1y, image1, image2);
+	    if(conv >max)//Updates Peak
 	      {
-		max = convolution;
+		max = conv;
 		peak.y = img1y;
-	        peak.x = img1x;
-	      }
-	    for(img2x = 0; img2x < image2->width; img2x++)
-	      {
-		for(img2y = 0; img2y < image2->height; img2y++)
-		  { 
-		    convolution += image1->data[img1x+img2x+(img2y+img1y)*image1->width] * image2->data[img2x+img2y*image2->width];
-
-      		    //pixel[x, y] == image->data[x + y*width]
-		  }
+		peak.x = img1x;
 	      }
 	  }
       }
+    //pixel[x, y] == image->data[x + y*width]
     return peak;
 }
 
 
-/*
-int convolution(int img1x, int img1y, struct * image1 ,struct * image2)
-{
-  int i;
-  int j;
-  for(i = 0; i < image2->width; i++)
-    {
-      for(j=0; j < image2->height;j++)
-	 convolution = image1->data[img1x+img1y*image1->width] * 
-		                  image2->data[img2y+img2y*image2->width];
-
-
-*/
