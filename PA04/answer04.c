@@ -37,7 +37,7 @@ SparseNode *SparseArray_build(int * indicies, int * values, int length)
 
   for(i=0;i<length;i++)
     {
-      array = SparseArray_add(indicies[i],value[i]);
+      array = SparseArray_add(array,indicies[i],value[i]);
     }
 
   return array;
@@ -149,10 +149,18 @@ SparseNode * SparseArray_getNode(SparseNode * array, int index )
     }
   if(index < array->index)
     {
-      SparseArray_getNode(array->left, 
+      SparseArray_getNode(array->left, index);
+    }
+  if(index > array->index)
+    {
+      SparseArray_getNode(array->right,index);
+    }
+  if(index == array-index)
+    {
+      return array;
     }
     
-  return NULL;
+  return 0;
 }
 
 /* Remove a value associated with a particular index from the sparse
@@ -174,6 +182,59 @@ SparseNode * SparseArray_getNode(SparseNode * array, int index )
 */
 SparseNode * SparseArray_remove ( SparseNode * array, int index )
 {
+  if(array == NULL)
+    {
+      return NULL;
+    }
+
+  if(index < (array->index))
+    {
+      array->left = SparseArray_remove(array->left,index);
+      return array;
+    }
+
+  if(index > (array->index))
+    {
+      array->right = SparseArray_remove(array->right,index);
+      return array;
+    }
+
+
+  if(((array->left)==NULL)&&(array->right)==NULL) //NO CHILD LEFT BEHIND
+    {
+      free(array);
+      return NULL;
+    }
+
+  if((array->left) == NULL)
+    {
+      SparseNode * connect = array->right;
+      free(array);
+      return connect;
+    }
+
+  if((array->right) == NULL)
+    {
+      SparseNode * connect2 = array->left;
+      free(array);
+      return connect2;
+    }
+
+  // PAGE 182 OF COURSE NOTES!!
+/*TreeNode * su = tn -> right;  su must not be NULL 
+while ((su -> left) != NULL)
+{
+su = su -> left;
+}
+tn -> value = su -> value;
+su -> value = val;
+tn -> right = Tree_delete(tn -> right, val);
+return tn;
+*/
+
+
+
+
   return array ;
 }
 
@@ -183,7 +244,19 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
 
 SparseNode * SparseArray_copy(SparseNode * array)
 {
-  return NULL;
+  SparseNode * new_array;
+  
+  if(array == NULL)
+    {
+      return NULL;
+    }
+  
+  SparseArray_add(new_array, array->index, array->value);
+  
+  if(array->left != NULL)
+    
+  
+  return array;
 }
 
 /* Merge array_1 and array_2, and return the result array. 
