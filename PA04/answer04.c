@@ -33,30 +33,15 @@ SparseNode *SparseNode_create(int index, int value)
 SparseNode *SparseArray_build(int * indicies, int * values, int length)
 {
   SparseNode * array = NULL;
+  int i;
+
+  for(i=0;i<length;i++)
+    {
+      array = SparseArray_add(indicies[i],value[i]);
+    }
+
   return array;
 }
-
-/* Destroy an entire sparse array. 
- * traversing the binary tree in postorder. Use the
- * SparseNode_destroy () function to destroy each node by itself.
- */
-void SparseArray_destroy ( SparseNode * array )
-{
- 
-/* Retrieve the smallest index in the sparse array. 
- */
-int SparseArray_getMin ( SparseNode * array )
-{
-  return 0;
-}
-
-/* Retrieve the largest index in the sparse array. 
- */
-int SparseArray_getMax ( SparseNode * array )
-{
-  return 0;
-}
-
 
 /* Add a particular value into a sparse array on a particular index.
  * The sparse array uses the index as a key in a binary search tree.
@@ -69,7 +54,85 @@ int SparseArray_getMax ( SparseNode * array )
 
 SparseNode * SparseArray_add ( SparseNode * array, int index, int value )
 {
+  //If array is NULL, create the node with the index
+  if(array == NULL)
+    {
+      return SparseNode_create(index, value);
+    }
+
+  //If index already exist, replace value at that index
+  if(index == (array->index))
+    {
+      array->value = value;
+      return array;
+    }
+  
+  //If index smaller go left, if larger go right
+  if(index < (array->index)
+    {
+      array->left = SparseArray_add(array->left, value);
+    }
+    else
+      {
+	array->right = SparseArray_add(array->right,value);
+      }
+ 
   return array ;
+}
+
+/* Destroy an entire sparse array. 
+ * traversing the binary tree in postorder. Use the
+ * SparseNode_destroy () function to destroy each node by itself.
+ */
+void SparseArray_destroy ( SparseNode * array )
+{
+  if(array == NULL)
+    {
+      return;
+    }
+  SparseArray_destroy(array->right);
+  SparseArray_destroy(array->left);
+  free(array); 
+}
+ 
+/* Retrieve the smallest index in the sparse array. 
+ */
+int SparseArray_getMin ( SparseNode * array )
+{
+  if(array == NULL)
+    {
+      return;
+    }
+  if(array->left != NULL)
+    {
+      SparseArray_getMin(array->left);
+    }
+  if(array->left == NULL)
+    {
+      return array->index;
+    }
+ 
+  return 0;
+}
+
+/* Retrieve the largest index in the sparse array. 
+ */
+int SparseArray_getMax ( SparseNode * array )
+{
+  if(array == NULL)
+    {
+      return;
+    }
+  if(array->right != NULL)
+    {
+      SparseArray_getMin(array->right);
+    }
+  if(array->right == NULL)
+    {
+      return array->index;
+    }
+ 
+  return 0;
 }
 
 /* Retrieve the node associated with a specific index in a sparse
@@ -80,6 +143,15 @@ SparseNode * SparseArray_add ( SparseNode * array, int index, int value )
  */
 SparseNode * SparseArray_getNode(SparseNode * array, int index )
 {
+  if(array == NULL)
+    {
+      return;
+    }
+  if(index < array->index)
+    {
+      SparseArray_getNode(array->left, 
+    }
+    
   return NULL;
 }
 
