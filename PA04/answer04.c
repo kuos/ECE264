@@ -6,14 +6,13 @@
 
 
 SparseNode * mergeHelp(SparseNode * copy, SparseNode * Array_2);
-/*void crashme()
-{
-  char * bad = NULL;
-  *bad = 'a'; // ARGGHHH!!!!
-}
+SparseNode * Combine(SparseNode*copy, SparseNode * array_2);
+
+SparseNode * merageHelp(SparseNode * array_1,SparseNode * array_2);
+SparseNode * SparseArray_insert ( SparseNode * array, int index, int value );
 
 
-void check(SparseNode * node)
+/*void check(SparseNode * node)
 {
   if(node == NULL)
     {
@@ -91,6 +90,9 @@ SparseNode *SparseArray_build(int * indicies, int * values, int length)
 
 SparseNode * SparseArray_add ( SparseNode * array, int index, int value )
 {
+
+  if(value != 0){
+ 
   //If array is NULL, create the node with the index
   if(array == NULL)
     {
@@ -113,20 +115,22 @@ SparseNode * SparseArray_add ( SparseNode * array, int index, int value )
     {
       array->right = SparseArray_add(array->right, index, value);
     }
- 
+  }
   return array;
+  
 }
 
 /* Destroy an entire sparse array. 
  * traversing the binary tree in postorder. Use the
  * SparseNode_destroy () function to destroy each node by itself.
  */
-void SparseArray_destroy ( SparseNode * array )
+void SparseArray_destroy (SparseNode * array )
 {
   if(array == NULL)
     {
       return;
     }
+  
   SparseArray_destroy(array->right);
   SparseArray_destroy(array->left);
   free(array); 
@@ -190,7 +194,6 @@ SparseNode * SparseArray_getNode(SparseNode * array, int index )
     }
 
   return SparseArray_getNode(array->right,index);
-
 }
 
 /* Remove a value associated with a particular index from the sparse
@@ -270,7 +273,7 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
 
 SparseNode * SparseArray_copy(SparseNode * array)
 {
-  //check(array);
+
   SparseNode * new_array;
 
   if(array == NULL)
@@ -279,7 +282,7 @@ SparseNode * SparseArray_copy(SparseNode * array)
     }
 
   new_array = SparseNode_create(array->index,array->value);
-  //  check(new_array);
+
 
   if((array->left) != NULL)
     {
@@ -293,37 +296,6 @@ SparseNode * SparseArray_copy(SparseNode * array)
 
   return new_array;
 }
-
-
-  /*SparseNode * left = SparseArray_copy(array->left);
-  new_array = SparseNode_create(array->index,array->value);
-  array->right = SparseArray_copy(array->right);
-  */
-
-
-  /*  SparseNode * new_array;
-  SparseNode * temp;
-  int max = SparseArray_getMax(array);
-  int ind = SparseArray_getMin(array);
-
-  if(array == NULL)
-    {
-      return NULL;
-    }
-
-  while(ind <= max)
-    {
-      temp = SparseArray_getNode(array,ind);
-      if(temp != 0)
-	{
-	  new_array = SparseArray_add(temp, temp->index, temp->value);
-	}
-      ind++
-    }
-
-  return new_array;
-  */
-
 
 /* Merge array_1 and array_2, and return the result array. 
  * This function WILL NOT CHANGE the contents in array_1 and array_2.
@@ -340,10 +312,80 @@ SparseNode * SparseArray_copy(SparseNode * array)
  * 
  */
 
+
+
+SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
+{
+  SparseNode * newArray =  SparseArray_copy(array_1);
+  SparseNode * array;
+  array = merageHelp(newArray,array_2);
+  SparseArray_destroy(array);
+
+  return newArray;
+}
+
+SparseNode * merageHelp(SparseNode * array_1,SparseNode * array_2)
+{ 
+  if(array_1== NULL || array_2 == NULL)
+    {
+      return NULL;
+    }
+  printf("index: %d  value: %d\n",array_2->index,array_2->value);
+
+  array_1 = SparseArray_insert(array_1,array_2->index,array_2->value);
+  SparseNode *newNode = SparseNode_create(array_2->index,array_2->value);
+
+  if(array_2->left != NULL)
+    {
+      newNode->left = merageHelp(array_1,array_2->left);
+    }
+  if(array_2->right != NULL)
+    {
+      newNode->right = merageHelp(array_1,array_2->right);
+    }
+  return newNode;
+}
+
+SparseNode * SparseArray_insert ( SparseNode * array, int index, int value )
+{
+
+  if(array == NULL)
+    {
+      return SparseNode_create(index,value);
+    } 
+  if(array->index == index)
+    {
+      array->value = array ->value + value;
+     
+      if(array->value == 0)
+	{
+	  array = SparseArray_remove(array,array->index);
+	}
+      return array;
+    }
+  if(index < (array->index))
+    {
+      array->left = SparseArray_insert(array->left,index,value);
+    }
+  else
+    {
+      array->right = SparseArray_insert(array->right,index,value);
+    }
+  return array ;
+}
+
+
+/*
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 {
   SparseNode * copy;
   
+  if(array_2 == NULL)
+    {
+      return NULL;
+    }
+
+
   copy = SparseArray_copy(array_1);
 
   copy = mergeHelp(copy, array_2);
@@ -352,24 +394,47 @@ SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
 }
 
 
-SparseNode * mergeHelp(SparseNode * copy, SparseNode * Array_2)
+SparseNode * mergeHelp(SparseNode * copy, SparseNode * array_2)
 {
+ 
+  if(array_2 == NULL)
+    {
+      return NULL;
+    }
 
+  array_2->left = mergeHelp(copy, array_2->left);
+  array_2->right = mergeHelp(copy, array_2->right);
+  
+  copy = Combine(copy, array_2);
+
+  return copy;
+
+} 
+
+SparseNode * Combine(SparseNode*copy, SparseNode * array_2)
+{
   SparseNode * check;
-
-  copy = mergeHelp(copy, array_2->left);
-  copy = mergeHelp(copy, array_2->right);
 
   check = SparseArray_getNode(copy, array_2->index);
 
   if(check == NULL)
     {
-      SparseArray_add(copy, array_2->index,array_2->value);
+      copy = SparseArray_add(copy, array_2->index,array_2->value);
+      return copy;
     }
 
-  if(check ==
+  if(check->index == array_2->index)
+    {
+      check->value += array_2->value;
 
-  
-  return(array_2);
+      if(check->value == 0)
+	{
+	  check = SparseArray_remove(copy, check->index);
+	}
+      
+    }
 
+  return copy;
 }
+
+*/
