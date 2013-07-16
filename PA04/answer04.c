@@ -91,17 +91,14 @@ SparseNode *SparseArray_build(int * indicies, int * values, int length)
 
 SparseNode * SparseArray_add ( SparseNode * array, int index, int value )
 {
-  if(value != 0)
+  if(value == 0)
   {
+    return array;
+  }
  
     //If array is NULL, create the node with the index
     if(array == NULL)
       {
-	if(index == 208)
-	  {
-	    printf("Bout to create!, [%d] %d\n", index, value);
-	  }
-
 	return SparseNode_create(index, value);
       }
 
@@ -121,9 +118,9 @@ SparseNode * SparseArray_add ( SparseNode * array, int index, int value )
       {
 	array->right = SparseArray_add(array->right, index, value);
       }
-  }
+
   return array;
-  
+
 }
 
 /* Destroy an entire sparse array. 
@@ -275,6 +272,7 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
   
   array->index  = connect3->index;
   connect3->index = array->index;
+  array->value = connect3->value;
   array->right = SparseArray_remove(array->right,index);
 
   return array ;
@@ -324,7 +322,6 @@ SparseNode * SparseArray_copy(SparseNode * array)
  *    should insert those nodes into array_1.
  * 
  */
-
 
 
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2)
@@ -405,4 +402,5 @@ SparseNode * Combine(SparseNode*copy, SparseNode * array_2)
   //	}
   return copy;
 }
+
 
