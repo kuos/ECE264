@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 
-
 SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2);
 SparseNode * mergeHelp (SparseNode * copy, SparseNode * array_2);
 SparseNode * Combine(SparseNode*copy, SparseNode * array_2);
@@ -271,8 +270,8 @@ SparseNode * SparseArray_remove ( SparseNode * array, int index )
     }
   
   array->index  = connect3->index;
-  connect3->index = array->index;
   array->value = connect3->value;
+  connect3->index = index;
   array->right = SparseArray_remove(array->right,index);
 
   return array ;
@@ -294,19 +293,15 @@ SparseNode * SparseArray_copy(SparseNode * array)
 
   new_array = SparseArray_add(new_array, array->index,array->value);
 
+  new_array->left = SparseArray_copy(array->left);
+  new_array->right = SparseArray_copy(array->right);
 
-  if((array->left) != NULL)
-    {
-      new_array->left = SparseArray_copy(array->left);
-    }
-
-  if(array->right != NULL)
-    {
-      new_array->right = SparseArray_copy(array->right);
-    }
 
   return new_array;
 }
+
+
+
 
 /* Merge array_1 and array_2, and return the result array. 
  * This function WILL NOT CHANGE the contents in array_1 and array_2.
@@ -353,11 +348,12 @@ SparseNode * mergeHelp(SparseNode * copy, SparseNode * array_2)
 
       copy = Combine(copy, array_2);
       
-      SparseNode* test = SparseArray_getNode(copy,208);
+      /*SparseNode* test = SparseArray_getNode(copy,208);
       if(test!=NULL)
 	{
 	  printf("Copied TEST: [%d] %d\n",test->index, test->value);
-	}
+	  //Test to see if index 208 got deleted or not
+	}*/
     }
   return copy;
 
@@ -373,7 +369,7 @@ SparseNode * Combine(SparseNode*copy, SparseNode * array_2)
     {
       //      if(array_2->index == 208||array_2->index==2876)
       //	{
-      //	  printf("ADD THE VALUE: [%d] %d\n", array_2->index, array_2->value);
+      //	  printf("ADD: [%d] %d\n", array_2->index, array_2->value);
       //	}
       copy = SparseArray_add(copy, array_2->index,array_2->value);
             if(array_2->index == 208)
@@ -402,5 +398,6 @@ SparseNode * Combine(SparseNode*copy, SparseNode * array_2)
   //	}
   return copy;
 }
+
 
 
