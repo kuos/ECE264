@@ -379,12 +379,12 @@ SparseNode * Combine(SparseNode*copy, SparseNode * array_2)
       //	  printf("ADD THE VALUE: [%d] %d\n", array_2->index, array_2->value);
       //	}
       copy = SparseArray_add(copy, array_2->index,array_2->value);
-      //      if(array_2->index == 208)
-      //	{	  
-      //	  SparseNode* test = SparseArray_getNode(copy,208);
-      //	  printf("Copied array: [%d] %d\n",test->index, test->value);
-      //	  printf("array_2 after: [%d] %d\n",array_2->index, array_2->value);
-      //}
+            if(array_2->index == 208)
+      	{	  
+      	  SparseNode* test = SparseArray_getNode(copy,208);
+      	  printf("Copied array: [%d] %d\n",test->index, test->value);
+      	  printf("array_2 after: [%d] %d\n",array_2->index, array_2->value);
+      }
     }
   else
     {
