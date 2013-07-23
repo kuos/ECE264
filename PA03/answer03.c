@@ -208,6 +208,7 @@ struct Image* loadImage(const char* filename)
   if(data_read != 1)
     {
       printf("\n\nERROR! Data reading fault\n\n\n");
+      printf("LENGTH, ACTUAL = %d %d\n\n", imghead->width*imghead->height, data_read);
       freeImage(img);
       free(imghead);
       return NULL;

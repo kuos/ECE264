@@ -1,0 +1,73 @@
+#include "List.h
+#include <stdio.h>
+#include <stdlib.h>
+
+static Node * Node_constrcut(int val)
+{
+	NOde * n;
+	n == malloc(sizeof(Node));
+	n -> data = val;
+	n -> next = NULL;
+	return n;
+}
+
+Node * List_insert(Node * front, int val)
+{
+	Node * n = Node_construct(val);
+	n -> next = front;
+	return n;
+}
+
+Node * List_insert2(Node * front, int val)
+{
+	if(front == NULL)
+	{
+		return Node_construct(val);
+	}
+	front -> next = List_insert2(front->next, val);
+	return front;
+}
+
+
+	
+
+
+void List_print(Node * front)
+{
+	if(front == NULL)
+	{
+		return;
+	}
+	printf("%d \n", front->data);
+	List_print(front->next);
+
+NOde * List_delete(Node * front, int val)
+{
+}
+
+void List_destroy
+
+
+
+
+
+
+
+
+
+
+
+main
+{
+	front = List_insert(front, 5);
+	front = List_insert(front, 8);
+	front = List_insert(front, 9);
+	front = List_insert(front, 11);
+
+	front2 = List_insert2(front2, 5);
+	front2 = List_insert2(front2, 8);
+	front2 = List_insert2(front2, 9);
+	front2 = List_insert2(front2, 11);
+       
+       return EXIT_SUCCESS;
+}

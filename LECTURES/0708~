@@ -1,0 +1,55 @@
+/*
+ * 1. You know the tsize of the memory when you write a program
+ *    int arr [100];
+ *
+ * 2. You know the size when the program is running
+ *   
+ *    read a file, count the number of lines, allocate memory
+ *    read a header, know the width and height, allocate memory.
+ *
+ * 3. A text editor => you never tell the editor the number of
+ *    characters you are going to enger
+ *
+ *    The program does not know at any point. ALlocate as needed.
+ *    Release when no longer needed.  
+ *
+ */
+
+/*
+data type - Linked List
+     	  - Binary Tree
+
+insert - add one item (line, account, student...)
+delete - remove one item
+destroy - delete everything
+search - check whether an item is in the record
+*/
+
+typedef struct listnode
+{
+	struct listnode* next;	//Pointer
+	int data;
+	char * Name;
+	double GPA;
+} ListNode
+
+int main(int argc, char ** argv)
+{
+	ListNode * node;
+
+	node = malloc(sizeof(struct ListNode));
+	node->data = 264;
+	node->next = NULL;
+
+	//malloc return NULL only when malloc fails NULL is invalid memory address
+	
+	ListNode * node2;
+
+	node = malloc(sizeof(struct ListNode));
+	node->data = 2013;
+	node->next = NULL;
+	node->next = node2;
+}
+
+	
+	

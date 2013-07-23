@@ -1,0 +1,76 @@
+==15604== Memcheck, a memory error detector
+==15604== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==15604== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==15604== Command: ./pa03 images/typing-practice.ee264 images/corrupt-testcases/incomplete-image.ee264 outputs/corrupt.ppm
+==15604== Parent PID: 15599
+==15604== 
+--15604-- 
+--15604-- Valgrind options:
+--15604--    --tool=memcheck
+--15604--    --leak-check=full
+--15604--    --verbose
+--15604--    --log-file=outputs/memoutput
+--15604-- Contents of /proc/version:
+--15604--   Linux version 2.6.32-358.11.1.el6.x86_64 (mockbuild@x86-022.build.eng.bos.redhat.com) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-3) (GCC) ) #1 SMP Wed May 15 10:48:38 EDT 2013
+--15604-- Arch and hwcaps: AMD64, amd64-sse3-cx16
+--15604-- Page sizes: currently 4096, max supported 4096
+--15604-- Valgrind library directory: /usr/lib64/valgrind
+--15604-- Reading syms from /home/shay/a/kuos/Desktop/ECE264/Kuos/ECE264/PA03/pa03
+--15604-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--15604--    object doesn't have a dynamic symbol table
+--15604-- Reading syms from /lib64/ld-2.12.so
+--15604-- Scheduler: using generic scheduler lock implementation.
+--15604-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==15604== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-15604-by-kuos-on-ecelinux21.ecn.purdue.edu
+==15604== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-15604-by-kuos-on-ecelinux21.ecn.purdue.edu
+==15604== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-15604-by-kuos-on-ecelinux21.ecn.purdue.edu
+==15604== 
+==15604== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==15604== don't want to do, unless you know exactly what you're doing,
+==15604== or are doing some strange experiment):
+==15604==   /usr/lib64/valgrind/../../bin/vgdb --pid=15604 ...command...
+==15604== 
+==15604== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==15604==   /path/to/gdb ./pa03
+==15604== and then give GDB the following command
+==15604==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=15604
+==15604== --pid is optional if only one valgrind process is running
+==15604== 
+--15604-- REDIR: 0x387e4174a0 (strlen) redirected to 0x38049551 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--15604-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--15604-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+--15604-- REDIR: 0x387e417310 (index) redirected to 0x4a07bf0 (index)
+--15604-- REDIR: 0x387e417390 (strcmp) redirected to 0x4a08530 (strcmp)
+--15604-- Reading syms from /lib64/libc-2.12.so
+--15604-- REDIR: 0x387e884e80 (strcasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--15604-- REDIR: 0x387e887140 (strncasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--15604-- REDIR: 0x387e882df0 (__GI_strrchr) redirected to 0x4a07a70 (__GI_strrchr)
+--15604-- REDIR: 0x387e87a8a0 (malloc) redirected to 0x4a0696c (malloc)
+--15604-- REDIR: 0x387e889820 (memcpy) redirected to 0x4a08b20 (memcpy)
+--15604-- REDIR: 0x387e87b6d0 (free) redirected to 0x4a06369 (free)
+--15604-- REDIR: 0x387e8846b0 (mempcpy) redirected to 0x4a09f80 (mempcpy)
+--15604-- REDIR: 0x387e881310 (__GI_strlen) redirected to 0x4a07f70 (__GI_strlen)
+--15604-- REDIR: 0x387e88aca0 (strchrnul) redirected to 0x4a09f10 (strchrnul)
+==15604== 
+==15604== HEAP SUMMARY:
+==15604==     in use at exit: 1,136 bytes in 2 blocks
+==15604==   total heap usage: 10 allocs, 8 frees, 30,024 bytes allocated
+==15604== 
+==15604== Searching for pointers to 2 not-freed blocks
+==15604== Checked 2,163,336 bytes
+==15604== 
+==15604== LEAK SUMMARY:
+==15604==    definitely lost: 0 bytes in 0 blocks
+==15604==    indirectly lost: 0 bytes in 0 blocks
+==15604==      possibly lost: 0 bytes in 0 blocks
+==15604==    still reachable: 1,136 bytes in 2 blocks
+==15604==         suppressed: 0 bytes in 0 blocks
+==15604== Reachable blocks (those to which a pointer was found) are not shown.
+==15604== To see them, rerun with: --leak-check=full --show-reachable=yes
+==15604== 
+==15604== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+--15604-- 
+--15604-- used_suppression:      4 U1004-ARM-_dl_relocate_object
+--15604-- used_suppression:      2 glibc-2.5.x-on-SUSE-10.2-(PPC)-2a
+==15604== 
+==15604== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)

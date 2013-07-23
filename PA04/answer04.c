@@ -7,6 +7,8 @@ SparseNode * SparseArray_merge(SparseNode * array_1, SparseNode * array_2);
 SparseNode * mergeHelp (SparseNode * copy, SparseNode * array_2);
 SparseNode * Combine(SparseNode*copy, SparseNode * array_2);
 
+
+//PRINTS THE ARRAY AND CHECK (used for debug)
 /*void check(SparseNode * node)
 {
   if(node == NULL)
@@ -132,15 +134,8 @@ void SparseArray_destroy (SparseNode * array )
     {
       return;
     }
-  
-  if(array->right != NULL)
-    {
-      SparseArray_destroy(array->right);
-    }
-  if(array->left != NULL)
-    {
-      SparseArray_destroy(array->left);
-    }
+  SparseArray_destroy(array->right);
+  SparseArray_destroy(array->left);
   free(array); 
 }
  
@@ -299,8 +294,6 @@ SparseNode * SparseArray_copy(SparseNode * array)
 
   return new_array;
 }
-
-
 
 
 /* Merge array_1 and array_2, and return the result array. 

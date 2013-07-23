@@ -41,9 +41,9 @@ HuffNode * Create_CharTree(FILE * f_ch)
 
   while(done == 0)
     {
-      c = fgetc(f_ch);
+      c = fgetc(f_ch); //Get the byte
       
-      if(c == '1')
+      if(c == '1')    //If its 1 make data into node, and push
 	{
 	  data  = fgetc(f_ch);
 	  top = push(top, HuffNode_create(data));
@@ -109,30 +109,6 @@ void Huff_postOrderPrint(FILE * f_out, HuffNode *tree)
 }
 
 // BIT 
-
-/*
-unsigned char * getBit (FILE * fptr, int * whichbit, last)
-{
-  unsigned char mask[] = {0x80,0x40,0x20,0x10;0x08;0x04,0x02,0x01}; 
-
-  if(*whichbit == 0)
-    {
-      unsigned char t = fgetc(fptr);
-      *last = t;
-      unsigned char s = t>>>7;
-      (*whichbit) ++;
-      return s;
-    }
-  else
-    {
-      unsigned t = (*last) & mask[*whichbit];
-      t>>=7-(*whichbit);
-      (*whichbit)++;
-      return t;
-    }
-}
-*/
-
 /*
 // Return 0, 1, or -1 on an error
 int getBit(FILE*)
@@ -160,6 +136,7 @@ int getByte(FILE * fp)
 }
 */
 
+/*
 HuffNode * Create_BitTree(FILE * f_bit)
 {
   int done = 0;
@@ -179,22 +156,82 @@ HuffNode * Create_BitTree(FILE * f_bit)
     {
       if((first & mask[whichbit-1]) != 0)
 	{
-	  first <<= whichbit;
-	  
 	  if(whichbit == 8)
 	    {
-	      data = fgetc(f_bit);
 	      whichbit = 1;
+	      data = fgetc(f_bit);
 	      first = fgetc(f_bit); //Get new byte, since used up      
 	    }
 	  else
 	    {
+	      first = first << whichbit;
 	      second = fgetc(f_bit);
-	      data = first |(second >> (8-whichbit));
+	      data = first |(second >> (9-whichbit));
 	      first = second;
 	    }
-	  whichbit++;
-	  printf("whichbit is: %d\n", whichbit);
+
+	  whichbit ++;
+	  top = push(top, HuffNode_create(data));
+	}
+      else
+	{
+	  if(whichbit == 8)
+	    {
+	      whichbit = 1;
+	      first = fgetc(f_bit); //Get new byte, since used up    
+	    }
+
+	  rc_tree = top->node;
+	  top =  pop(top);
+	  
+	  if(top == NULL)
+	    {
+	      done = 1;
+	    }
+	  else
+	    {
+	      lc = top->node;
+	      new = HuffNode_create(0);
+	      new -> right = rc_tree;
+	      new -> left = lc;
+	      top = pop(top);
+	      top = push(top, new);
+	    }
+	}
+    }  
+	 
+  return rc_tree;
+}
+
+*/
+
+//Modifies the Character tree create function
+//Reads bits for command, and byte for data instead
+
+HuffNode * Create_BitTree(FILE * f_bit)
+{
+
+  int done = 0;
+  char c, data;
+  Stack * top = NULL;
+  HuffNode * rc_tree;
+  HuffNode * lc;
+  HuffNode * new;
+  
+  int count = 0;      //Counter for index
+  unsigned char past; //Keep track of old data bits
+
+  int byte = 8;
+  int bit = 1;
+
+
+  while(done == 0)
+    {
+      c = getBit(f_bit, bit, &count, &past);
+      
+      if(c == 1)
+	{
+	  data  = getBit(f_bit, byte, &count, &past);
 	  top = push(top, HuffNode_create(data));
 	}
       else
@@ -216,7 +253,62 @@ HuffNode * Create_BitTree(FILE * f_bit)
 	      top = pop(top);
 	      top = push(top, new);
 	    }
-	}
+	}    	   
     }  
   return rc_tree;
+}
+
+// FOR DEBUGG USE:
+// Prints out bit by bit
+void print_bits(char * filename)
+{
+  unsigned char masks[] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};
+
+  FILE * fptr = fopen(filename,"r");
+  while(!feof(fptr))
+    {
+      unsigned char t = fgetc(fptr);
+      int i;
+      for(i = 0; i<8; i++)
+	{
+	  printf("%d",((t&masks[i])!=0));
+	}
+      printf("\n");
+    }
+}
+
+
+char getBit(FILE * f_bit, int size, int * counter, unsigned char * past)
+{
+  //If counter is 0, read a byte (First case scenario)
+  if(*counter == 0)
+    {
+      fread(past, 1, 1, f_bit);
+      (*counter) = 8;
+    }
+
+  unsigned char bit;
+  int mask = 1;
+  bit = (*past);   //Initialize the past data, to the array to be added to
+
+  if(*counter < size) //If counter smaller than size, shift the byte and another byte, "or" them togher.
+    {
+      bit = (*past);
+      bit = (bit << (8 - (*counter)));
+      fread(past, 1, 1, f_bit);
+      bit = (bit|((*past) >> (*counter)));
+      return bit;
+    }
+
+  if(size == 1) //Only get 1 bit (Command)
+    {
+      bit = mask & (bit >> ((*counter) - size));
+      (*counter) = ((*counter)-1);
+    }
+  else
+    {
+      bit = (bit >> ((*counter)-size)); //Taking full byte as data
+      (*counter) = 0;
+    }
+  return bit;   
 }

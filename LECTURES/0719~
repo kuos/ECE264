@@ -1,0 +1,65 @@
+
+
+
+
+
+1. Structure for tree node
+2. Structure for stack
+
+LINKS:
+{ below /*stack*/
+  treenode /*root of the treenode */
+}
+
+done = 0;
+
+while(done == 0)
+{
+	read a command
+	if (command is 0)
+	{  
+	   read letter from file, create treenode to store letter
+	   and push the treenode on stack
+	}
+	
+	else
+	{
+	   pop the stack, store at s
+	      if(stack is empty)
+	      {
+		done is true //=1
+	      }
+	      else
+	      {
+		pop stack, store in r create new treenode, left is s,
+		right is r, push this node on to stack
+	      }
+	   }
+}
+
+
+
+
+
+Store the commands as 0 or 1 one bit
+in a c program
+read a byte (8 bits)
+fgetc
+EOF
+
+unsigned char:
+unsigned char mask1 = 0x10;
+mask = 128;
+
+if((cmd & mask) ! = 0)
+// DONT DO == 1
+{
+    /* cmd is 1 */
+    data = cmd;
+    data <<=1;   // shift left by 1 bit
+
+}
+else
+{
+   /*cmd is 0*/
+}

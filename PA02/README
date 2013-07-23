@@ -1,0 +1,25 @@
+This assignment asks you to write a program that can
+
+* count the amounts of data stored in files
+* allocate memory based on the amounts
+* read the files and store the data in the allocated memory
+* order the data by calling the qsort
+* save the sorted data into files
+
+The main function will read two lines at a time from filelist, one as
+input, one as output, and detect if the input name contains "str". From
+there it calls the two functions depend on if the input is a file with
+strings or integers. The main function will run all the testcases in 
+filelist(which is in the directory called "input"). If you want to test 
+for a single case, you need to write your own test main function.
+
+For a file storing strings, you can assume that the length of each
+line does not exceed LINELENGTH.  However, your program does not know
+the number of lines in a file. 
+ 
+Type "make help" in terminal to see the further option you have when 
+you compile the program. Read the Makefile to get better understanding
+on each command. Use "man <command>" in terminal to read linux user 
+command manual.
+
+Don't forget to check memory leak.

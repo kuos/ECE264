@@ -1,0 +1,96 @@
+==10013== Memcheck, a memory error detector
+==10013== Copyright (C) 2002-2012, and GNU GPL'd, by Julian Seward et al.
+==10013== Using Valgrind-3.8.1 and LibVEX; rerun with -h for copyright info
+==10013== Command: ./pa02 inputs/filelist
+==10013== Parent PID: 10012
+==10013== 
+--10013-- 
+--10013-- Valgrind options:
+--10013--    --tool=memcheck
+--10013--    --leak-check=full
+--10013--    --verbose
+--10013--    --log-file=outputs/memoutput
+--10013-- Contents of /proc/version:
+--10013--   Linux version 2.6.32-358.11.1.el6.x86_64 (mockbuild@x86-022.build.eng.bos.redhat.com) (gcc version 4.4.7 20120313 (Red Hat 4.4.7-3) (GCC) ) #1 SMP Wed May 15 10:48:38 EDT 2013
+--10013-- Arch and hwcaps: AMD64, amd64-sse3-cx16
+--10013-- Page sizes: currently 4096, max supported 4096
+--10013-- Valgrind library directory: /usr/lib64/valgrind
+--10013-- Reading syms from /home/shay/a/kuos/Desktop/ECE264/Kuos/ECE264/PA02/pa02
+--10013-- Reading syms from /usr/lib64/valgrind/memcheck-amd64-linux
+--10013--    object doesn't have a dynamic symbol table
+--10013-- Reading syms from /lib64/ld-2.12.so
+--10013-- Scheduler: using generic scheduler lock implementation.
+--10013-- Reading suppressions file: /usr/lib64/valgrind/default.supp
+==10013== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-10013-by-kuos-on-ecelinux17.ecn.purdue.edu
+==10013== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-10013-by-kuos-on-ecelinux17.ecn.purdue.edu
+==10013== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-10013-by-kuos-on-ecelinux17.ecn.purdue.edu
+==10013== 
+==10013== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==10013== don't want to do, unless you know exactly what you're doing,
+==10013== or are doing some strange experiment):
+==10013==   /usr/lib64/valgrind/../../bin/vgdb --pid=10013 ...command...
+==10013== 
+==10013== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==10013==   /path/to/gdb ./pa02
+==10013== and then give GDB the following command
+==10013==   target remote | /usr/lib64/valgrind/../../bin/vgdb --pid=10013
+==10013== --pid is optional if only one valgrind process is running
+==10013== 
+--10013-- REDIR: 0x34fae174a0 (strlen) redirected to 0x38049551 (vgPlain_amd64_linux_REDIR_FOR_strlen)
+--10013-- Reading syms from /usr/lib64/valgrind/vgpreload_core-amd64-linux.so
+--10013-- Reading syms from /usr/lib64/valgrind/vgpreload_memcheck-amd64-linux.so
+--10013-- REDIR: 0x34fae17310 (index) redirected to 0x4a07bf0 (index)
+--10013-- REDIR: 0x34fae17390 (strcmp) redirected to 0x4a08530 (strcmp)
+--10013-- Reading syms from /lib64/libc-2.12.so
+--10013-- REDIR: 0x34fb284e80 (strcasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--10013-- REDIR: 0x34fb287140 (strncasecmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--10013-- REDIR: 0x34fb282df0 (__GI_strrchr) redirected to 0x4a07a70 (__GI_strrchr)
+--10013-- REDIR: 0x34fb27a8a0 (malloc) redirected to 0x4a0696c (malloc)
+--10013-- REDIR: 0x34fb283500 (memchr) redirected to 0x4a085d0 (memchr)
+--10013-- REDIR: 0x34fb289820 (memcpy) redirected to 0x4a08b20 (memcpy)
+--10013-- REDIR: 0x34fb2812d0 (strlen) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--10013-- REDIR: 0x34fb332d50 (__strlen_sse42) redirected to 0x4a07f50 (strlen)
+--10013-- REDIR: 0x34fb28aca0 (strchrnul) redirected to 0x4a09f10 (strchrnul)
+--10013-- REDIR: 0x34fb27b6d0 (free) redirected to 0x4a06369 (free)
+--10013-- REDIR: 0x34fb28e670 (strstr) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--10013-- REDIR: 0x34fb329c80 (__strstr_sse42) redirected to 0x4a0a160 (strstr)
+--10013-- REDIR: 0x34fb28ac50 (__GI___rawmemchr) redirected to 0x4a09f60 (__GI___rawmemchr)
+--10013-- REDIR: 0x34fb27f890 (strcmp) redirected to 0x480155c (_vgnU_ifunc_wrapper)
+--10013-- REDIR: 0x34fb327a80 (__strcmp_sse42) redirected to 0x4a08490 (strcmp)
+==10013== 
+==10013== Process terminating with default action of signal 2 (SIGINT)
+==10013==    at 0x400BDE: cmpStr (answer02.c:182)
+==10013==    by 0x34FB234CE8: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B47: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B37: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B37: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B47: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B37: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B47: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B37: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B47: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB234B47: msort_with_tmp (in /lib64/libc-2.12.so)
+==10013==    by 0x34FB23519B: qsort_r (in /lib64/libc-2.12.so)
+==10013== 
+==10013== HEAP SUMMARY:
+==10013==     in use at exit: 961,136 bytes in 10,004 blocks
+==10013==   total heap usage: 12,504 allocs, 2,500 frees, 30,854,124 bytes allocated
+==10013== 
+==10013== Searching for pointers to 10,004 not-freed blocks
+==10013== Checked 1,274,896 bytes
+==10013== 
+==10013== LEAK SUMMARY:
+==10013==    definitely lost: 0 bytes in 0 blocks
+==10013==    indirectly lost: 0 bytes in 0 blocks
+==10013==      possibly lost: 0 bytes in 0 blocks
+==10013==    still reachable: 961,136 bytes in 10,004 blocks
+==10013==         suppressed: 0 bytes in 0 blocks
+==10013== Reachable blocks (those to which a pointer was found) are not shown.
+==10013== To see them, rerun with: --leak-check=full --show-reachable=yes
+==10013== 
+==10013== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)
+--10013-- 
+--10013-- used_suppression:      4 U1004-ARM-_dl_relocate_object
+--10013-- used_suppression:      2 glibc-2.5.x-on-SUSE-10.2-(PPC)-2a
+==10013== 
+==10013== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 6 from 6)

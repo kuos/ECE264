@@ -221,7 +221,7 @@ void recursivePermute ( char * charset , int ind , int length )
       change(&charset[i] , & charset[ind]);
       recursivePermute (charset,ind + 1 ,length);
       change(&charset[i] ,&charset[ind]);
-    }
+      }
 }
 
 void permute(char * charset, int len)

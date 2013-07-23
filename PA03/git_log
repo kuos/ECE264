@@ -1,0 +1,71 @@
+commit ead6dc053d30e077adc99718326e5b9efe6516c7
+Author: kuos <kuos@purdue.edu>
+Date:   Fri Jul 5 13:43:48 2013 -0400
+
+    Finished product
+
+commit d8e4488cad5c3e162e04e82c8eb222b6aa415641
+Author: kuos <kuos@purdue.edu>
+Date:   Fri Jul 5 11:13:42 2013 -0400
+
+    ConvolutionMax function created, still wrong
+
+commit ed5f302922a2660cefc734a4f1bbbce78f5d6ffe
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jul 2 12:32:33 2013 -0400
+
+    Added all Error code, pass all currupt testcases
+
+commit a3ca0a313035d2b4c8220735776ca164f18d7156
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jul 2 10:51:43 2013 -0400
+
+    Completed image load function, works and debugged
+
+commit e33d5f55739018aa0ef100d87a27b3665901f93f
+Author: kuos <kuos@purdue.edu>
+Date:   Mon Jul 1 12:28:30 2013 -0400
+
+    Modified code, so read 16 bytes together instead of 4 at a time, changed header to non- pointer
+
+commit 1638fe5c7a83945fb9a259d865b32675b4008f22
+Author: kuos <kuos@purdue.edu>
+Date:   Sun Jun 30 14:57:45 2013 -0400
+
+    open binary file (rb), check for success
+
+commit 161bb6bec24fa147ca8e462b65037dffcf063063
+Author: kuos <kuos@purdue.edu>
+Date:   Sun Jun 30 14:38:19 2013 -0400
+
+    Non-changes yet, new
+
+commit 7ee8d4556e2caee6ae34c00f6bf552df0f7428a7
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jun 18 18:15:11 2013 -0400
+
+    new comments
+
+commit d37a699c77ebffa1fbf967698cd39a08beab1b03
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jun 18 18:10:13 2013 -0400
+
+    Answer01.c for assignment 1
+
+commit a8fc7bd85ba4ab36182841fc2c9d6f38ff44b0d3
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jun 11 11:37:27 2013 -0400
+
+    Just an example of commiting
+
+commit 9030ebfedef304690be7c47cbb86a81d379a9663
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jun 11 11:31:33 2013 -0400
+
+    Adding assignment PA01
+
+commit 80c3f3742f65a6de00b721790722a80fcde3f54f
+Author: kuos <kuos@purdue.edu>
+Date:   Tue Jun 11 08:14:03 2013 -0700
+
+    Initial commit

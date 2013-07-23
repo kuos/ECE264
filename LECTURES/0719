@@ -1,0 +1,124 @@
+
+
+1. Structure for tree node
+2. Structure for stack
+
+LINKS:
+{ below /*stack*/
+  treenode /*root of the treenode */
+}
+
+done = 0;
+
+while(done == 0)
+{
+	read a command
+	if (command is 0)
+	{  
+	   read letter from file, create treenode to store letter
+	   and push the treenode on stack
+	}
+	
+	else
+	{
+	   pop the stack, store at s
+	      if(stack is empty)
+	      {
+		done is true //=1
+		unless whichbit is 7
+	      }
+	      else
+	      {
+		pop stack, store in r create new treenode, left is s,
+		right is r, push this node on to stack
+	      }
+	   }
+}
+
+
+
+
+Store the commands as 0 or 1 one bit
+in a c program
+read a byte (8 bits)
+fgetc
+EOF
+
+unsigned char:
+unsigned char mask1 = 0x80;
+mask = 128;
+
+if((cmd & mask) ! = 0)
+// DONT DO == 1
+{
+    /* cmd is 1 */
+    data = cmd;
+    data <<= whichbit;   // shift left by whichbit
+    t = fgetc(fptr);
+    data = data |(t>>7);
+
+}
+else
+{
+   /*cmd is 0*/
+}
+
+//create array of masks
+unsigned char mask[]= {0x80,0x40,0x20,0x10; 0x08, 0x04,0x02,0x01};
+	 which bit = 0;
+	 everytime you read a cmd is 1	which bit++
+	 whichbit = (whichbit % 8);
+	 cmd = cmd & masks[whichbit];
+
+
+
+
+if(cmd is 1)
+{
+ for(i=0,i<8;i++)
+{
+	unsigned char t = getbit(fpt, whichbit, last);
+}	
+
+
+unsigned char getbit (FILE * fptr, int *whichbit, unsigned char * last)
+{
+	if(*whichbit==0)
+	{
+		unsigned char t = fgetc(fptr);
+		*last = t;
+		unsigned char s = t>>7;
+		(*whichbit) ++;
+		return s;
+	}
+	else
+	{
+	unsigned t = (*last) & masters[*whichbit];
+	t>>=7-(*whichbit);
+	(*whichbit)++;
+	return t;
+        }
+}
+
+
+
+
+
+
+
+DEBUGG:
+
+
+void print_bits(char * Filename)
+{
+	FILE * fpt = fopen(filename);
+	while(!feof(fpt))
+	{
+		unsigned char t = fgetc(fptr);
+		for(i = 0, i<8; i++)
+		{
+			printf("%d",((t&masks[i])!=0));
+		}
+		printf("\n");
+	}
+}
