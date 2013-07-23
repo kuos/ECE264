@@ -29,7 +29,7 @@ HuffNode * HuffNode_create(char value)
 }
 
 
-HuffNode * Create_CharTree(FILE * f)
+HuffNode * Create_CharTree(FILE * f_ch)
 {
 
   int done = 0;
@@ -41,11 +41,11 @@ HuffNode * Create_CharTree(FILE * f)
 
   while(done == 0)
     {
-      c = fgetc(f);
+      c = fgetc(f_ch);
       
       if(c == '1')
 	{
-	  data  = fgetc(f);
+	  data  = fgetc(f_ch);
 	  top = push(top, HuffNode_create(data));
 	}
       else
@@ -133,44 +133,74 @@ unsigned char * getBit (FILE * fptr, int * whichbit, last)
 }
 */
 
-HuffNode * Create_BitTree(FILE * f)
+/*
+// Return 0, 1, or -1 on an error
+int getBit(FILE*)
 {
-  return NULL;
+
 }
 
-/*int done = 0;
-  Stack* top = NULL
-  
-  char c, data;
+// Return -1 if there is an error
+int getByte(FILE * fp)
+{
+  unsigned char byte = 0;
+  int i;
+  for(i = 0; i < 8; ++i) {
+    int bit = getBit(fp);
+    if(bit < 0)
+      return -1; // An error
+    // i == 0, left-shift 7
+    // i == 1, left-shift 6
+    // i == 2, left-shift 5
+    // i == 3, left-shift 4
+    // ...
+    // i == 7, left-shift 0
+  }
+  return byte;
+}
+*/
 
+HuffNode * Create_BitTree(FILE * f_bit)
+{
+  int done = 0;
+  Stack* top = NULL;
+  
   HuffNode * rc_tree;
   HuffNode * lc;
   HuffNode * new;
 
-  unsigned char mask[] = {0x80;0x40,0x20,0x10;0x08,0x04,0x02,0x01};
-  unsigned char cmd;
-  char data;
-  char data_next;
-  int whichbit = 0;
+  unsigned int mask[] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};
+  int whichbit = 1;
+  unsigned char first = fgetc(f_bit); //get the first byte
+  unsigned char second;
+  unsigned char data;
 
-  cmd = fgetc(f); //get the first byte
-
-  while(done == 0)
-    {     
-      if((cmd & mask[whichbit]) != 0)
+  while(done != 1)
+    {
+      if((first & mask[whichbit-1]) != 0)
 	{
-	  //First bit is 1
-	  data = cmd;
-	  data <<=whichbit;       //Shift byte#1 by however much we need
-	  data_next = fgetc(fptr);
-	  data = data |(data_next>>(7-whichbit)); //Shift byte#2 by however much we don't need
-	  whichbit ++;
+	  first <<= whichbit;
+	  
+	  if(whichbit == 8)
+	    {
+	      data = fgetc(f_bit);
+	      whichbit = 1;
+	      first = fgetc(f_bit); //Get new byte, since used up      
+	    }
+	  else
+	    {
+	      second = fgetc(f_bit);
+	      data = first |(second >> (8-whichbit));
+	      first = second;
+	      whichbit ++;
+	      printf("WHICH BIT: %d\n\n", whichbit);
+	    }
 
 	  top = push(top, HuffNode_create(data));
 	}
       else
 	{
-	  rc_tree = HuffNode_create(0);  //The right child, or the tree top
+	  //The right child, or the tree top
 	  rc_tree = top->node;
 	  top =  pop(top);
 	  
@@ -180,19 +210,14 @@ HuffNode * Create_BitTree(FILE * f)
 	    }
 	  else
 	    {
-	      lc = HuffNode_create(0);
 	      lc = top->node;
 	      new = HuffNode_create(0);
-	      new -> right = rc;
+	      new -> right = rc_tree;
 	      new -> left = lc;
 	      top = pop(top);
 	      top = push(top, new);
 	    }
 	}    	   
     }  
-
   return rc_tree;
 }
-
-
-*/
