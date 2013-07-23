@@ -192,10 +192,9 @@ HuffNode * Create_BitTree(FILE * f_bit)
 	      second = fgetc(f_bit);
 	      data = first |(second >> (8-whichbit));
 	      first = second;
-	      whichbit ++;
-	      printf("WHICH BIT: %d\n\n", whichbit);
 	    }
-
+	  whichbit++;
+	  printf("whichbit is: %d\n", whichbit);
 	  top = push(top, HuffNode_create(data));
 	}
       else
@@ -217,7 +216,7 @@ HuffNode * Create_BitTree(FILE * f_bit)
 	      top = pop(top);
 	      top = push(top, new);
 	    }
-	}    	   
+	}
     }  
   return rc_tree;
 }
