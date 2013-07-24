@@ -136,74 +136,6 @@ int getByte(FILE * fp)
 }
 */
 
-/*
-HuffNode * Create_BitTree(FILE * f_bit)
-{
-  int done = 0;
-  Stack* top = NULL;
-  
-  HuffNode * rc_tree;
-  HuffNode * lc;
-  HuffNode * new;
-
-  unsigned int mask[] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};
-  int whichbit = 1;
-  unsigned char first = fgetc(f_bit); //get the first byte
-  unsigned char second;
-  unsigned char data;
-
-  while(done != 1)
-    {
-      if((first & mask[whichbit-1]) != 0)
-	{
-	  if(whichbit == 8)
-	    {
-	      whichbit = 1;
-	      data = fgetc(f_bit);
-	      first = fgetc(f_bit); //Get new byte, since used up      
-	    }
-	  else
-	    {
-	      first = first << whichbit;
-	      second = fgetc(f_bit);
-	      data = first |(second >> (9-whichbit));
-	      first = second;
-	    }
-
-	  whichbit ++;
-	  top = push(top, HuffNode_create(data));
-	}
-      else
-	{
-	  if(whichbit == 8)
-	    {
-	      whichbit = 1;
-	      first = fgetc(f_bit); //Get new byte, since used up    
-	    }
-
-	  rc_tree = top->node;
-	  top =  pop(top);
-	  
-	  if(top == NULL)
-	    {
-	      done = 1;
-	    }
-	  else
-	    {
-	      lc = top->node;
-	      new = HuffNode_create(0);
-	      new -> right = rc_tree;
-	      new -> left = lc;
-	      top = pop(top);
-	      top = push(top, new);
-	    }
-	}
-    }  
-	 
-  return rc_tree;
-}
-
-*/
 
 //Modifies the Character tree create function
 //Reads bits for command, and byte for data instead
@@ -283,7 +215,7 @@ char getBit(FILE * f_bit, int size, int * counter, unsigned char * past)
   //If counter is 0, read a byte (First case scenario)
   if(*counter == 0)
     {
-      fread(past, 1, 1, f_bit);
+      *past = fgetc(f_bit); //Read the first byte
       (*counter) = 8;
     }
 
@@ -295,7 +227,8 @@ char getBit(FILE * f_bit, int size, int * counter, unsigned char * past)
     {
       bit = (*past);
       bit = (bit << (8 - (*counter)));
-      fread(past, 1, 1, f_bit);
+
+      *past = fgetc(f_bit);                   //Reads another bit, shift and combine
       bit = (bit|((*past) >> (*counter)));
       return bit;
     }
@@ -312,3 +245,77 @@ char getBit(FILE * f_bit, int size, int * counter, unsigned char * past)
     }
   return bit;   
 }
+
+
+
+
+/*TRIES THAT FAILED!!
+===================================================
+
+HuffNode * Create_BitTree(FILE * f_bit)
+{
+  int done = 0;
+  Stack* top = NULL;
+  
+  HuffNode * rc_tree;
+  HuffNode * lc;
+  HuffNode * new;
+
+  unsigned int mask[] = {0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};
+  int whichbit = 1;
+  unsigned char first = fgetc(f_bit); //get the first byte
+  unsigned char second;
+  unsigned char data;
+
+  while(done != 1)
+    {
+      if((first & mask[whichbit-1]) != 0)
+	{
+	  if(whichbit == 8)
+	    {
+	      whichbit = 1;
+	      data = fgetc(f_bit);
+	      first = fgetc(f_bit); //Get new byte, since used up      
+	    }
+	  else
+	    {
+	      first = first << whichbit;
+	      second = fgetc(f_bit);
+	      data = first |(second >> (9-whichbit));
+	      first = second;
+	    }
+
+	  whichbit ++;
+	  top = push(top, HuffNode_create(data));
+	}
+      else
+	{
+	  if(whichbit == 8)
+	    {
+	      whichbit = 1;
+	      first = fgetc(f_bit); //Get new byte, since used up    
+	    }
+
+	  rc_tree = top->node;
+	  top =  pop(top);
+	  
+	  if(top == NULL)
+	    {
+	      done = 1;
+	    }
+	  else
+	    {
+	      lc = top->node;
+	      new = HuffNode_create(0);
+	      new -> right = rc_tree;
+	      new -> left = lc;
+	      top = pop(top);
+	      top = push(top, new);
+	    }
+	}
+    }  
+	 
+  return rc_tree;
+}
+
+*/
