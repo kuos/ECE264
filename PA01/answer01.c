@@ -230,3 +230,36 @@ void permute(char * charset, int len)
   recursivePermute(charset,0,len);
 }
 
+
+
+
+
+
+
+void partitionAltHelp(int *result, int ind, int left)
+{
+  int val = 0;
+  if (left == 0){
+    printPartition(result, ind);
+  }
+  
+  for (val=1;val<=left;val++){
+    result[ind] = val;
+
+    if (ind != 0)
+      {
+	if(result[ind-1] % 2 = (arr[ind]%2)){
+	}
+
+      }
+
+    partition(result, ind + 1, left - val);
+  }
+}
+
+void partitionAlt(int value)
+{
+  int array[MAXLENGTH]={0};
+  printf("partitionAll %d\n", value);
+  partition(array, 0, value);
+}

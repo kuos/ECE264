@@ -1,0 +1,25 @@
+
+#include <pthread.h>
+
+long status;
+
+pthread_t th;
+
+pthread_attr_t attr;
+
+/*t is some data, probably and object*/
+
+
+
+pthread_atti_t int (&attr);
+pthread_create(&th, &attr, func, object);
+       //Library
+pthread_join(th,&status);
+
+void * tunc(void* ovj)
+{
+  //your structure * p = (yours *job;,
+
+
+}//it stores nothing
+//everything is passed as an argument
