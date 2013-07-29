@@ -24,6 +24,7 @@ typedef struct _object {
 } Object;
 
 
+
 uint128 alphaTou128(const char * str)
 {
     uint128 ret = 0;
@@ -39,18 +40,37 @@ uint128 alphaTou128(const char * str)
 /**
  * The caller is responsible for freeing the result 
  */
-/*
+
+
 char * u128ToString(uint128 value)
 {
-  char * str = ;
+  int length = 0;
+
+  uint128 temp = value;
+  uint128 temp2 = value;
+
+
+  while (temp != 0)
+    {
+      temp /= 10;
+      length ++;
+    }
+
+  char * str = malloc(sizeof(char)*(length+1));
   
-  while(
+  str[length] = '\0';
+  
+  int i;
 
+  for(i = length-1; i >= 0; i--)
+    {
+      str[i] = (temp2  % 10) + '0';
+      temp2 /= 10;
+    }
 
-  free(
-  return NULL;
+  return str;
 }
-*/
+
 
 
 
@@ -69,7 +89,7 @@ char * u128ToString(uint128 value)
 int primalityTestParallel(uint128 value, int n_threads)
 {
   //Test if the value is 2 or 1:
-  if(value == 2)
+  if(value == 2 || value == 1)
     {
       return TRUE;
     }
@@ -81,28 +101,30 @@ int primalityTestParallel(uint128 value, int n_threads)
     }
 
   //Initialize threads and attr for later use:
-  pthread_t thread[n_threads];
-  pthread_attr_t attr;
-  pthread_attr_init(&attr);
-  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+  pthread_t * thread = malloc(sizeof(pthread_t) * n_threads);
+  pthread_attr_t *  attr = malloc(sizeof(pthread_attr_t) * n_threads);
+
+  //pthread_attr_init(&attr);
+  //pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
  
 
   //Getting the max value for testing,
   //Dividing up the chunks for threads.
   int max = floor(sqrt(value));
-  uint128 chunk_size = (max + n_threads + 1)/ n_threads;
+  uint128 chunk_size = (max + n_threads)/ n_threads;
 
   //Creating a object array:
-  Object * object = malloc(sizeof(object)*n_threads);
+  
+  Object * object = malloc(sizeof(Object)*n_threads);
 
-  int i;
+  uint128 i;
   int created;
 
   for(i = 0; i < n_threads; i++)
     {
       object[i].value = value; 
       object[i].low_bd  = i * chunk_size;
-      object[i].up_bd = (i+1)*chunk_size -1;
+      object[i].up_bd = (i+1)*chunk_size;
       
       //If lower bound less than 3, make it 3
       //If lower bound even, make it odd
@@ -114,9 +136,11 @@ int primalityTestParallel(uint128 value, int n_threads)
 	{
 	  object[i].low_bd ++;
 	}
+
+      pthread_attr_init(&attr[i]);
       
       //Create the actual thread, pass in function and object
-      created = pthread_create(&thread[i], &attr, primeTest, &object[i]);
+      created = pthread_create(&thread[i], &attr[i], primeTest, (void *) &object[i]);
 
       if (created)
 	{
@@ -125,38 +149,42 @@ int primalityTestParallel(uint128 value, int n_threads)
 	}
     } 
   
-  pthread_attr_destroy(&attr);
+  //pthread_attr_destroy(&attr);
 
   //Join the threads:
   int j;
   int joined;
-  void * status;
+  //void * status;
 
-  for(j = 0; j < n_threads; i++)
+  for(j = 0; j < n_threads; j++)
     {
-      joined = pthread_join(thread[j], &status);
-      if(joined)
+      joined = pthread_join(thread[j], NULL);
+      /* if(joined != 0)
 	{
 	  printf("EROOR, Thread not joined properly!!");
 	  return 0;
 	}
+      */
     }
 
-  int k;
-  int result = 0;
-  for(k = 0; k < n_threads; k++)
+  int result;
+
+  result = 1;
+  int k = 0;
+  for(k=0; k <n_threads;k++)
     {
-      result += object[i].prime;
+      if(object[k].prime != 1)
+	{
+	  result = 0;
+	  k = n_threads;
+	}
     }
 
-  if(result == 0)
-    {
-      return FALSE;
-    }
-  else
-    {
-      return TRUE;
-    }
+  free(thread);
+  free(attr);
+  free(object);
+ 
+  return result;
 }
 
 
@@ -172,18 +200,23 @@ and test each chunk in a separate thread. If /any/
 chunk of the computation finds a factor, then the number is not prime.*/
 
 
-void primeTest(void * object)
+void * primeTest(void * obj)
 {
-  Object * oinfo = object;
-  int i;
+  Object * oinfo = (Object *)obj;
+  uint128 i;
 
   for (i = oinfo->low_bd; i <= oinfo->up_bd; i+=2) 
     {
 	if (oinfo->value % i  == 0) 
-	  oinfo->prime = FALSE;
-	  return;
+	  {
+	    oinfo->prime = FALSE;
+	    return NULL;
+	  }
+	
     }	
-
     oinfo->prime = TRUE;
-    return;
+    return NULL;
 }
+
+
+(*obj)->low_

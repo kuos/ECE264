@@ -57,14 +57,14 @@ int main(int argc, char * * argv)
 
     // What was the input number?
     uint128 n = alphaTou128(argv[1]);
-    //char * n_str = u128ToString(n);    
+    char * n_str = u128ToString(n); 
 
     // How many concurrent threads?
     errno = 0; // so we know if strtol fails
     int n_threads = strtol(argv[2], NULL, 10);
 
     // Was there an error in the input arguments?
-    /*    int error = FALSE;
+        int error = FALSE;
     if(errno != 0 || n_threads <= 0) {
 	fprintf(stderr, "2nd argument must be a valid integer >= 1, aborting.\n");
 	error = TRUE;
@@ -79,7 +79,7 @@ int main(int argc, char * * argv)
 	exit(1);
     }
     free(n_str);
-    */
+   
   
     struct timeval time1;
     struct timeval time2;
